@@ -1,0 +1,15 @@
+// Cloudflare Worker configuration for the Woodhouse Voucher Desk.
+// Cloudflare reads this on every deploy (Workers Builds runs
+// `npx wrangler deploy` after each push to the production branch).
+{
+  "name": "vouchers",
+  "compatibility_date": "2026-11-02",
+
+  // The whole site is static files: the page, the two voucher designs and
+  // their PDF templates. PDFs are filled in and locked in the browser, so
+  // there is no server code and nothing is stored.
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  }
+}

@@ -1,0 +1,373 @@
+<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Woodhouse Voucher Desk</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+/* Layout: editor form on the left, true-to-print voucher preview on the right; stacks on narrow screens */
+:root{
+  --bg:#F1F4F1; --surface:#FFFFFF; --sunk:#E7ECE7; --ink:#1E2923; --muted:#5B6A61; --line:#D6DDD7;
+  --accent:#DF5F3E; --accent-ink:#FFFFFF; --accent-soft:#FBE7E0; --forest:#2E5B44; --forest-soft:#DDEBE2;
+  --warn:#9A6300; --warn-soft:#FBEFD5;
+  --display:"Nunito", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121815; --surface:#1A221E; --sunk:#222B26; --ink:#E6ECE8; --muted:#9BA9A1; --line:#2E3933;
+  --accent:#F0795A; --accent-ink:#1A0E0A; --accent-soft:#3A221B; --forest:#8CC9A6; --forest-soft:#1F3328;
+  --warn:#F2C26B; --warn-soft:#3A2E17; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1A221E; --sunk:#222B26; --ink:#E6ECE8; --muted:#9BA9A1; --line:#2E3933;
+  --accent:#F0795A; --accent-ink:#1A0E0A; --accent-soft:#3A221B; --forest:#8CC9A6; --forest-soft:#1F3328;
+  --warn:#F2C26B; --warn-soft:#3A2E17; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:20px 18px;max-width:1180px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:38px;height:38px;border-radius:9px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink)}
+.brand h1{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.brand p{margin:0;color:var(--muted);font-size:13px}
+.lock{display:inline-flex;align-items:center;gap:6px;background:var(--forest-soft);color:var(--forest);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700}
+
+.editor{max-width:1180px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}
+@media (max-width:900px){.editor{grid-template-columns:minmax(0,1fr)}}
+.form{padding:20px;display:grid;gap:18px;align-content:start;border-right:1px solid var(--line);min-width:0}
+@media (max-width:900px){.form{border-right:0;border-bottom:1px solid var(--line)}}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--sunk);border-radius:9px;padding:3px;gap:3px}
+.seg button{border:0;background:none;border-radius:7px;padding:9px;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:14px;min-width:0}
+legend{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0;margin-bottom:10px}
+.f{display:grid;gap:5px;min-width:0}
+.f label,.lab label{font-size:13px;font-weight:600}
+.hint{font-size:12px;color:var(--muted)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:420px){.pair{grid-template-columns:1fr}}
+.input{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer}
+.presets button:hover{border-color:var(--accent)}
+.presets button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.line-row{display:grid;gap:4px}
+.lab{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.opt{color:var(--muted);font-weight:400}
+.fit{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.fit.small{color:var(--warn);font-weight:700}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:4px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:var(--sunk)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(.95)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--sunk)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.preview{padding:20px;display:grid;gap:10px;align-content:start;background:var(--sunk);border-radius:0 var(--r) var(--r) 0;min-width:0}
+@media (max-width:900px){.preview{border-radius:0 0 var(--r) var(--r)}}
+.preview-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.preview-head span:last-child{min-width:0;overflow-wrap:anywhere}
+.sheet{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:595.48/842.26;box-shadow:0 1px 2px rgba(0,0,0,.12),0 8px 24px rgba(0,0,0,.10);border-radius:3px;overflow:hidden;background:#fff}
+.sheet img,.sheet svg{position:absolute;inset:0;width:100%;height:100%;display:block;max-width:100%}
+.sheet text{font-family:Helvetica,Arial,"Liberation Sans",sans-serif;fill:#000}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;max-width:calc(100vw - 32px);z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.banner{max-width:1180px;margin:0 auto 14px;background:var(--warn-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:14px}
+@media (prefers-reduced-motion:no-preference){.btn,.presets button{transition:background .12s,border-color .12s}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2.5"/></svg>
+    </div>
+    <div>
+      <h1>Voucher Desk</h1>
+      <p>Woodhouse Adventure Park · e-vouchers &amp; Club Woodhouse</p>
+    </div>
+  </div>
+  <span class="lock" title="Downloaded PDFs open normally and can be printed, but can't be edited or have their text copied.">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    PDFs are locked against editing
+  </span>
+</header>
+
+<div class="banner" id="banner" hidden></div>
+
+<main class="editor" aria-label="Voucher editor">
+  <form class="form" id="form" autocomplete="off">
+    <div class="seg" role="group" aria-label="Voucher design">
+      <button type="button" id="tGift" data-type="gift" aria-pressed="true">Gift voucher</button>
+      <button type="button" id="tClub" data-type="club" aria-pressed="false">Club Woodhouse</button>
+    </div>
+
+    <fieldset id="giftFields">
+      <legend>Printed on the voucher</legend>
+      <div class="f">
+        <label>Start from</label>
+        <div class="presets" id="presets"></div>
+      </div>
+      <div class="line-row">
+        <div class="lab"><label for="line1">Line 1</label><span class="fit" id="fit1"></span></div>
+        <input class="input" id="line1" maxlength="60">
+      </div>
+      <div class="line-row">
+        <div class="lab"><label for="line2">Line 2</label><span class="fit" id="fit2"></span></div>
+        <input class="input" id="line2" maxlength="60">
+      </div>
+      <div class="line-row">
+        <div class="lab"><label for="line3">Line 3 <span class="opt">(optional)</span></label><span class="fit" id="fit3"></span></div>
+        <input class="input" id="line3" maxlength="60">
+      </div>
+      <div class="pair">
+        <div class="f"><label for="validTo">Valid to</label><input class="input" id="validTo" type="date"></div>
+        <div class="f"><label for="numberG">Voucher #</label><input class="input" id="numberG" maxlength="14"><span class="hint" id="numHintG"></span></div>
+      </div>
+    </fieldset>
+
+    <fieldset id="clubFields" hidden>
+      <legend>Printed on the membership</legend>
+      <div class="pair">
+        <div class="f"><label for="activateBy">Must be activated by</label><input class="input" id="activateBy" type="date"></div>
+        <div class="f"><label for="numberC">Voucher number</label><input class="input" id="numberC" maxlength="12"><span class="hint" id="numHintC"></span></div>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button class="btn primary" id="dlBtn" type="submit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        Download PDF
+      </button>
+      <button class="btn ghost" id="resetBtn" type="button">Clear form</button>
+    </div>
+  </form>
+
+  <div class="preview">
+    <div class="preview-head"><span>Preview · A4, as it will print</span><span id="fname"></span></div>
+    <div class="sheet">
+      <img id="bg" alt="Voucher design" src="gift-bg.jpg">
+      <svg id="ov" viewBox="0 0 595.482 842.259" aria-hidden="true"></svg>
+    </div>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="/vendor/pdf-lib.min.js"></script>
+<script>
+(() => {
+const T = {
+  gift: { pdf:"gift-template.pdf", bg:"gift-bg.jpg", w:595.482, h:842.259, y0:0,
+    fields:[
+      {k:"line1", r:[320.661,722.93,573.141,750.289], max:18},
+      {k:"line2", r:[321.621,693.649,574.101,721.01], max:18},
+      {k:"line3", r:[321.621,664.849,574.101,692.209], max:18},
+      {k:"validTo", r:[358.714,633.409,444.459,655.008], max:12, date:true},
+      {k:"number", r:[498.132,633.409,572.096,654.354], max:12}
+    ]},
+  club: { pdf:"club-template.pdf", bg:"club-bg.jpg", w:595.5, h:842.25, y0:7.82999,
+    fields:[
+      {k:"activateBy", r:[417.252,630.965,493.872,645.626], max:12, date:true},
+      {k:"number", r:[417.252,612.671,493.872,627.333], max:12}
+    ]}
+};
+const PRESETS = [
+  {id:"day-ind", label:"Day Adventure · Individual", line1:"Day Adventure Pass", line2:"1 x Individual", line3:""},
+  {id:"day-grp", label:"Day Adventure · Family/Group of 4", line1:"1 x Family / Group of 4", line2:"Day Adventure Pass", line3:""},
+  {id:"night", label:"1 Night Camping · Group of 4", line1:"1 Night Camping Adventure", line2:"Group of 4", line3:""},
+  {id:"custom", label:"Blank", line1:"", line2:"", line3:""}
+];
+const $ = id => document.getElementById(id);
+const els = {form:$("form"), gift:$("giftFields"), club:$("clubFields"), presets:$("presets"),
+  line1:$("line1"), line2:$("line2"), line3:$("line3"), validTo:$("validTo"), numberG:$("numberG"),
+  activateBy:$("activateBy"), numberC:$("numberC"), dl:$("dlBtn"), reset:$("resetBtn"),
+  bg:$("bg"), ov:$("ov"), fname:$("fname"), toast:$("toast"), banner:$("banner"),
+  numHintG:$("numHintG"), numHintC:$("numHintC")};
+
+let font = null, draft = null;
+
+/* ---------- dates ---------- */
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+// Gift: same day, 3 years from today (29 Feb rolls back to 28 Feb)
+const giftExpiry = () => { const n = new Date(); const d = new Date(n.getFullYear()+3, n.getMonth(), n.getDate()); if (d.getMonth() !== n.getMonth()) d.setDate(0); return iso(d); };
+// Club: last day of the month, 3 months from now (e.g. any day in Oct 2026 -> 31 Jan 2027)
+const clubExpiry = () => { const n = new Date(); return iso(new Date(n.getFullYear(), n.getMonth()+4, 0)); };
+const au = s => { if(!s) return ""; const [y,m,d] = s.split("-"); return d+"/"+m+"/"+y; };
+
+/* ---------- next-number hint (remembered in this browser only) ---------- */
+const LAST_KEY = "woodhouse-last-number-";
+function lastNumber(type){ try { return localStorage.getItem(LAST_KEY+type) || ""; } catch(e){ return ""; } }
+function rememberNumber(type, n){ try { if (n) localStorage.setItem(LAST_KEY+type, n); } catch(e){} }
+function nextAfter(s){ const m = /^(.*?)(\d+)$/.exec((s||"").trim()); return m ? m[1] + String(+m[2]+1).padStart(m[2].length,"0") : ""; }
+
+/* ---------- text fitting (Helvetica metrics) ---------- */
+let measureCtx = null;
+function widthAt1(text){
+  if (font) { try { return font.widthOfTextAtSize(text, 1); } catch(e){} }
+  measureCtx = measureCtx || document.createElement("canvas").getContext("2d");
+  measureCtx.font = "100px Helvetica, Arial, sans-serif";
+  return measureCtx.measureText(text).width / 100;
+}
+function cleanText(s){
+  s = (s||"").replace(/\s+/g," ").trim().replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
+  if (!font) return s;
+  return [...s].map(ch => { try { font.encodeText(ch); return ch; } catch(e){ return "?"; } }).join("");
+}
+function layout(type, data){
+  return T[type].fields.map(f => {
+    const text = f.date ? au(data[f.k]) : cleanText(data[f.k]);
+    const w = widthAt1(text), avail = (f.r[2]-f.r[0]) - 4;
+    const size = text ? Math.max(6, Math.min(f.max, w ? avail/w : f.max)) : f.max;
+    const baseline = f.r[1] + ((f.r[3]-f.r[1]) - size*0.718)/2;
+    return {k:f.k, text, size, x:f.r[0]+2, baseline, max:f.max};
+  });
+}
+
+/* ---------- form ---------- */
+function blankDraft(type){
+  const p = PRESETS[0];
+  return {type, line1:p.line1, line2:p.line2, line3:"", validTo:giftExpiry(), activateBy:clubExpiry(), number:""};
+}
+function toForm(){
+  const d = draft;
+  els.line1.value = d.line1; els.line2.value = d.line2; els.line3.value = d.line3;
+  els.validTo.value = d.validTo; els.activateBy.value = d.activateBy;
+  els.numberG.value = d.type==="gift" ? d.number : ""; els.numberC.value = d.type==="club" ? d.number : "";
+  const g = d.type === "gift";
+  $("tGift").setAttribute("aria-pressed", g); $("tClub").setAttribute("aria-pressed", !g);
+  els.gift.hidden = !g; els.club.hidden = g;
+  const t = T[d.type];
+  if (!els.bg.src.endsWith(t.bg)) els.bg.src = t.bg;
+  els.ov.setAttribute("viewBox", `0 0 ${t.w} ${t.h}`);
+}
+function fromForm(){
+  const d = draft;
+  d.line1 = els.line1.value; d.line2 = els.line2.value; d.line3 = els.line3.value;
+  d.validTo = els.validTo.value; d.activateBy = els.activateBy.value;
+  d.number = (d.type==="gift" ? els.numberG.value : els.numberC.value).trim();
+}
+function presetId(){ const d = draft; const p = PRESETS.find(p => p.line1===d.line1 && p.line2===d.line2 && p.line3===d.line3); return p ? p.id : "custom"; }
+function renderPresets(){
+  const cur = presetId();
+  els.presets.innerHTML = "";
+  for (const p of PRESETS) {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = p.label; b.setAttribute("aria-pressed", cur === p.id);
+    b.onclick = () => { fromForm(); draft.line1=p.line1; draft.line2=p.line2; draft.line3=p.line3; toForm(); update(); if (p.id==="custom") els.line1.focus(); };
+    els.presets.appendChild(b);
+  }
+}
+function fileName(d){
+  const safe = s => (s||"").replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ").trim();
+  if (d.type === "club") return `Club Woodhouse Membership${d.number?" - "+safe(d.number):""}.pdf`;
+  const what = safe([d.line1,d.line2].filter(s => s && s.trim()).join(" - ")) || "Gift Voucher";
+  return `Woodhouse E-Voucher - ${what}${d.number?" - "+safe(d.number):""}.pdf`;
+}
+
+/* ---------- preview ---------- */
+const NS = "http://www.w3.org/2000/svg";
+function update(){
+  fromForm();
+  renderPresets();
+  const t = T[draft.type], top = t.y0 + t.h, lay = layout(draft.type, draft);
+  els.ov.innerHTML = "";
+  for (const L of lay) {
+    if (!L.text) continue;
+    const el = document.createElementNS(NS,"text");
+    el.setAttribute("x", L.x); el.setAttribute("y", top - L.baseline); el.setAttribute("font-size", L.size.toFixed(2));
+    el.textContent = L.text;
+    els.ov.appendChild(el);
+  }
+  if (draft.type === "gift") [1,2,3].forEach(i => {
+    const L = lay[i-1], out = $("fit"+i);
+    if (!L.text) { out.textContent = ""; out.className = "fit"; return; }
+    out.textContent = L.size < L.max - 0.05 ? `shrunk to ${L.size.toFixed(1)} pt to fit` : `${L.max} pt`;
+    out.className = "fit" + (L.size < 13 ? " small" : "");
+  });
+  const hint = draft.type==="gift" ? els.numHintG : els.numHintC;
+  (draft.type==="gift" ? els.numHintC : els.numHintG).textContent = "";
+  const last = lastNumber(draft.type);
+  hint.textContent = draft.number ? "" : (last ? `Last one you made: ${last}. Next would be ${nextAfter(last)}` : "e.g. R30986");
+  els.fname.textContent = fileName(draft);
+}
+
+/* ---------- PDF ---------- */
+const tplCache = {};
+function randomPassword(){ const a = new Uint8Array(24); crypto.getRandomValues(a); return Array.from(a, b => b.toString(16).padStart(2,"0")).join(""); }
+async function buildPdf(d){
+  const {PDFDocument, StandardFonts, rgb} = PDFLib;
+  const t = T[d.type];
+  if (!tplCache[d.type]) {
+    const res = await fetch(t.pdf);
+    if (!res.ok) throw new Error("Couldn't load the voucher design file. Reload the page and try again.");
+    tplCache[d.type] = await res.arrayBuffer();
+  }
+  const doc = await PDFDocument.load(tplCache[d.type].slice(0));
+  const f = await doc.embedFont(StandardFonts.Helvetica);
+  const page = doc.getPage(0);
+  for (const L of layout(d.type, d)) if (L.text) page.drawText(L.text, {x:L.x, y:L.baseline, size:L.size, font:f, color:rgb(0,0,0)});
+  doc.setTitle(fileName(d).replace(/\.pdf$/,""));
+  doc.setAuthor("Woodhouse Adventure Park");
+  doc.setCreator("Woodhouse Voucher Desk");
+  // Opens without a password; a random, never-shown owner password locks editing, copying and form changes. Printing stays allowed.
+  doc.encrypt({
+    userPassword: "",
+    ownerPassword: randomPassword(),
+    permissions: {printing:"highResolution", modifying:false, copying:false, annotating:false, fillingForms:false, contentAccessibility:true, documentAssembly:false}
+  });
+  return await doc.save();
+}
+// Plain browser download: hand the PDF to a temporary link and click it.
+function saveFile(name, blob){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+async function download(){
+  fromForm();
+  if (draft.type==="gift" && !draft.line1.trim() && !draft.line2.trim()) { toast("Add the voucher wording first."); els.line1.focus(); return; }
+  if (!window.PDFLib) { toast("The PDF tool didn't load. Reload the page and try again."); return; }
+  els.dl.disabled = true;
+  try {
+    const bytes = await buildPdf(draft);
+    saveFile(fileName(draft), new Blob([bytes], {type:"application/pdf"}));
+    rememberNumber(draft.type, draft.number);
+    update();
+    toast("Downloaded.");
+  } catch(e) {
+    toast((e && e.message) ? e.message : "Couldn't create the download. Try again.");
+  } finally { els.dl.disabled = false; }
+}
+
+let toastT;
+function toast(msg){ els.toast.textContent = msg; els.toast.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => els.toast.hidden = true, 3600); }
+
+/* ---------- wire up ---------- */
+els.form.addEventListener("input", update);
+els.form.addEventListener("change", update);
+els.form.addEventListener("submit", e => { e.preventDefault(); download(); });
+els.reset.onclick = () => { draft = blankDraft(draft.type); toForm(); update(); };
+[$("tGift"), $("tClub")].forEach(b => b.onclick = () => {
+  if (draft.type === b.dataset.type) return;
+  fromForm(); draft.type = b.dataset.type; draft.number = ""; toForm(); update();
+});
+
+draft = blankDraft("gift"); toForm(); update();
+
+if (window.PDFLib) {
+  PDFLib.PDFDocument.create().then(d => d.embedFont(PDFLib.StandardFonts.Helvetica)).then(f => { font = f; update(); }).catch(() => {});
+}
+})();
+</script>
+
+</body></html>
