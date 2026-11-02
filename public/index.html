@@ -45,12 +45,14 @@ button,input{font:inherit;color:inherit}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 fieldset{border:0;margin:0;padding:0;display:grid;gap:14px;min-width:0}
 legend{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0;margin-bottom:10px}
-.f{display:grid;gap:5px;min-width:0}
+.f{display:grid;gap:5px;min-width:0;align-content:start}
 .f label,.lab label{font-size:13px;font-weight:600}
 .hint{font-size:12px;color:var(--muted)}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:420px){.pair{grid-template-columns:1fr}}
-.input{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+.input{width:100%;min-width:0;height:42px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 11px;line-height:normal}
+/* Date pickers draw taller than text boxes by default; keep every field the same height. */
+input[type="date"].input::-webkit-datetime-edit{padding:0}
 .input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 .presets{display:flex;flex-wrap:wrap;gap:6px}
 .presets button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer}
