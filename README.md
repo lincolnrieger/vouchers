@@ -16,14 +16,28 @@ normally, but is locked against editing and copying text. The app also
 remembers the last voucher number you used (in that browser only) and
 suggests the next one.
 
+## Password
+
+The whole site sits behind a staff password. Nothing loads without it, not
+the app and not the voucher designs. Signing in lasts 30 days on that device;
+**Sign out** is top right. After 10 wrong tries in a minute from one address,
+further tries are refused until the minute is up.
+
+The password is **not in this code**. It's the Worker secret
+`ACCESS_PASSWORD`: **Workers & Pages → vouchers → Settings → Variables and
+Secrets**. Cloudflare stores it encrypted and won't show it again. To change
+it, edit that secret and deploy. Changing it signs everyone out. If the
+secret is ever removed, the site stays locked rather than opening up.
+
 ## How it works
 
-Everything happens in the browser. There is no server code and nothing is
-stored or sent anywhere: the page loads the PDF template, writes the text onto
+Apart from the password check (`src/index.js`), everything happens in the
+browser and nothing is stored or sent anywhere: the page loads the PDF template, writes the text onto
 it with [pdf-lib](https://github.com/cantoo-scribe/pdf-lib), encrypts it, and
 downloads it.
 
 ```
+src/index.js               password check in front of every request
 public/index.html          the whole app
 public/gift-template.pdf   gift voucher design (what gets filled in)
 public/gift-bg.jpg         image of the same design, for the preview
@@ -35,7 +49,8 @@ wrangler.jsonc             Cloudflare Worker settings
 
 ## Hosting
 
-A Cloudflare Worker with static assets, called `vouchers`. Every push to the
+A Cloudflare Worker with static assets, called `vouchers`. Every request goes
+through `src/index.js` first. Every push to the
 production branch redeploys it automatically, usually within a minute. The
 address `vouchers.woodhousestaff.app` is attached under **Workers & Pages →
 vouchers → Domains**.
