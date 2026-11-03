@@ -150,6 +150,8 @@ input[type="date"].input::-webkit-datetime-edit{padding:0}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
         Download PDF
       </button>
+      <button class="btn" id="emailBtn" type="button">Copy email</button>
+      <button class="btn" id="recordBtn" type="button">Copy record</button>
       <button class="btn ghost" id="resetBtn" type="button">Clear form</button>
     </div>
   </form>
@@ -349,6 +351,40 @@ function toast(msg){ els.toast.textContent = msg; els.toast.hidden = false; clea
 els.form.addEventListener("input", update);
 els.form.addEventListener("change", update);
 els.form.addEventListener("submit", e => { e.preventDefault(); download(); });
+/* ---------- copy email template / record ---------- */
+const EMAIL_TEXT = `Hi XX,
+
+Thanks so much for purchasing a Woodhouse gift voucher!
+
+Attached is your voucher, ready to print and share with someone special. It’s the gift of fun, adventure, and memory-making in the great outdoors - what could be better?
+
+If you have any questions, please don’t hesitate to reach out.
+
+Kind regards,
+
+-`;
+function recordText(){
+  fromForm();
+  const exp = draft.type === "club" ? draft.activateBy : draft.validTo;
+  const t = new Date();
+  const today = String(t.getDate()).padStart(2,"0")+"/"+String(t.getMonth()+1).padStart(2,"0")+"/"+t.getFullYear();
+  return `Expiry: ${au(exp)}\nEmail Sent: ${today}`;
+}
+async function copyText(text, done){
+  try { await navigator.clipboard.writeText(text); }
+  catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch(_){}
+    ta.remove();
+    if (!ok) { toast("Couldn't copy. Try again."); return; }
+  }
+  toast(done);
+}
+$("emailBtn").onclick = () => copyText(EMAIL_TEXT, "Email copied.");
+$("recordBtn").onclick = () => copyText(recordText(), "Record copied.");
+
 els.reset.onclick = () => { draft = blankDraft(draft.type); toForm(); update(); };
 [$("tGift"), $("tClub")].forEach(b => b.onclick = () => {
   if (draft.type === b.dataset.type) return;
