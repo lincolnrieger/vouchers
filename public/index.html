@@ -270,9 +270,7 @@ function renderPresets(){
 }
 function fileName(d){
   const safe = s => (s||"").replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g," ").trim();
-  if (d.type === "club") return `Club Woodhouse Membership${d.number?" - "+safe(d.number):""}.pdf`;
-  const what = safe([d.line1,d.line2].filter(s => s && s.trim()).join(" - ")) || "Gift Voucher";
-  return `Woodhouse E-Voucher - ${what}${d.number?" - "+safe(d.number):""}.pdf`;
+  return `${safe(d.number) || "Voucher"}.pdf`;
 }
 
 /* ---------- preview ---------- */
