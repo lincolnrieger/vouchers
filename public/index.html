@@ -65,6 +65,7 @@ input[type="date"].input::-webkit-datetime-edit{padding:0}
 .fit.small{color:var(--warn);font-weight:700}
 .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:4px}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.btn{text-decoration:none;color:inherit}
 .btn:hover{background:var(--sunk)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.primary:hover{filter:brightness(.95)}
@@ -150,6 +151,9 @@ input[type="date"].input::-webkit-datetime-edit{padding:0}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
         Download PDF
       </button>
+      <button class="btn" id="emailBtn" type="button">Copy email</button>
+      <button class="btn" id="recordBtn" type="button">Copy record</button>
+      <a class="btn" id="recordLink" href="https://woodhouse.venuelife.net/#/events/21216" target="_blank" rel="noopener">Open Gift Voucher records ↗</a>
       <button class="btn ghost" id="resetBtn" type="button">Clear form</button>
     </div>
   </form>
@@ -204,12 +208,6 @@ const giftExpiry = () => { const n = new Date(); const d = new Date(n.getFullYea
 // Club: last day of the month, 3 months from now (e.g. any day in Oct 2026 -> 31 Jan 2027)
 const clubExpiry = () => { const n = new Date(); return iso(new Date(n.getFullYear(), n.getMonth()+4, 0)); };
 const au = s => { if(!s) return ""; const [y,m,d] = s.split("-"); return d+"/"+m+"/"+y; };
-
-/* ---------- next-number hint (remembered in this browser only) ---------- */
-const LAST_KEY = "woodhouse-last-number-";
-function lastNumber(type){ try { return localStorage.getItem(LAST_KEY+type) || ""; } catch(e){ return ""; } }
-function rememberNumber(type, n){ try { if (n) localStorage.setItem(LAST_KEY+type, n); } catch(e){} }
-function nextAfter(s){ const m = /^(.*?)(\d+)$/.exec((s||"").trim()); return m ? m[1] + String(+m[2]+1).padStart(m[2].length,"0") : ""; }
 
 /* ---------- text fitting (Helvetica metrics) ---------- */
 let measureCtx = null;
@@ -295,9 +293,11 @@ function update(){
   });
   const hint = draft.type==="gift" ? els.numHintG : els.numHintC;
   (draft.type==="gift" ? els.numHintC : els.numHintG).textContent = "";
-  const last = lastNumber(draft.type);
-  hint.textContent = draft.number ? "" : (last ? `Last one you made: ${last}. Next would be ${nextAfter(last)}` : "e.g. R30986");
+  hint.textContent = draft.number ? "" : "e.g. R30986";
   els.fname.textContent = fileName(draft);
+  const rl = $("recordLink");
+  rl.href = "https://woodhouse.venuelife.net/#/events/" + (draft.type === "club" ? "7953" : "21216");
+  rl.textContent = (draft.type === "club" ? "Open Club Woodhouse records" : "Open Gift Voucher records") + " ↗";
 }
 
 /* ---------- PDF ---------- */
@@ -342,7 +342,6 @@ async function download(){
   try {
     const bytes = await buildPdf(draft);
     saveFile(fileName(draft), new Blob([bytes], {type:"application/pdf"}));
-    rememberNumber(draft.type, draft.number);
     update();
     toast("Downloaded.");
   } catch(e) {
@@ -357,6 +356,40 @@ function toast(msg){ els.toast.textContent = msg; els.toast.hidden = false; clea
 els.form.addEventListener("input", update);
 els.form.addEventListener("change", update);
 els.form.addEventListener("submit", e => { e.preventDefault(); download(); });
+/* ---------- copy email template / record ---------- */
+const EMAIL_TEXT = `Hi XX,
+
+Thanks so much for purchasing a Woodhouse gift voucher!
+
+Attached is your voucher, ready to print and share with someone special. It’s the gift of fun, adventure, and memory-making in the great outdoors - what could be better?
+
+If you have any questions, please don’t hesitate to reach out.
+
+Kind regards,
+
+-`;
+function recordText(){
+  fromForm();
+  const exp = draft.type === "club" ? draft.activateBy : draft.validTo;
+  const t = new Date();
+  const today = String(t.getDate()).padStart(2,"0")+"/"+String(t.getMonth()+1).padStart(2,"0")+"/"+t.getFullYear();
+  return `Expiry: ${au(exp)}\nEmail Sent: ${today}`;
+}
+async function copyText(text, done){
+  try { await navigator.clipboard.writeText(text); }
+  catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch(_){}
+    ta.remove();
+    if (!ok) { toast("Couldn't copy. Try again."); return; }
+  }
+  toast(done);
+}
+$("emailBtn").onclick = () => copyText(EMAIL_TEXT, "Email copied.");
+$("recordBtn").onclick = () => copyText(recordText(), "Record copied.");
+
 els.reset.onclick = () => { draft = blankDraft(draft.type); toForm(); update(); };
 [$("tGift"), $("tClub")].forEach(b => b.onclick = () => {
   if (draft.type === b.dataset.type) return;
