@@ -65,6 +65,7 @@ input[type="date"].input::-webkit-datetime-edit{padding:0}
 .fit.small{color:var(--warn);font-weight:700}
 .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:4px}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 16px;font-weight:700;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.btn{text-decoration:none;color:inherit}
 .btn:hover{background:var(--sunk)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.primary:hover{filter:brightness(.95)}
@@ -152,6 +153,7 @@ input[type="date"].input::-webkit-datetime-edit{padding:0}
       </button>
       <button class="btn" id="emailBtn" type="button">Copy email</button>
       <button class="btn" id="recordBtn" type="button">Copy record</button>
+      <a class="btn" id="recordLink" href="https://woodhouse.venuelife.net/#/events/21216" target="_blank" rel="noopener">Open Gift Voucher records ↗</a>
       <button class="btn ghost" id="resetBtn" type="button">Clear form</button>
     </div>
   </form>
@@ -293,6 +295,9 @@ function update(){
   (draft.type==="gift" ? els.numHintC : els.numHintG).textContent = "";
   hint.textContent = draft.number ? "" : "e.g. R30986";
   els.fname.textContent = fileName(draft);
+  const rl = $("recordLink");
+  rl.href = "https://woodhouse.venuelife.net/#/events/" + (draft.type === "club" ? "7953" : "21216");
+  rl.textContent = (draft.type === "club" ? "Open Club Woodhouse records" : "Open Gift Voucher records") + " ↗";
 }
 
 /* ---------- PDF ---------- */
